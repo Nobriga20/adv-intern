@@ -1,89 +1,163 @@
 "use client";
-
+import SearchBar from "../../../components/SearchBar";
+import Sidebar from "../../../components/Sidebar";
+import "../book-page.css";
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { useAppDispatch, useAppSelector } from "../../../lib/store";
-import { openModal } from "../../../store/authSlice";
-import type { Book } from "../../../components/BookCard";
+import { useParams } from "next/navigation";
+import { CiStar } from "react-icons/ci";
+import { CiClock1 } from "react-icons/ci";
+import { CiMicrophoneOn } from "react-icons/ci";
+import { PiLightbulbFilament } from "react-icons/pi";
+import { PiBookOpenText } from "react-icons/pi";
+import { CiBookmark } from "react-icons/ci";
+import Link from "next/link";
+import { BookPageSkeleton } from "../../../components/BookSkeleton";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../lib/store";
 
-async function fetchBook(id: string) {
-  const url = `https://us-central1-summaristt.cloudfunctions.net/getBook?id=${id}`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error("Failed to fetch book");
-  return res.json();
-}
-
-export default function BookPage() {
+const bookPage = () => {
+  const [bookInfo, setBookInfo] = useState<any>(null);
   const params = useParams();
-  const router = useRouter();
-  const dispatch = useAppDispatch();
-  const { loggedIn, user } = useAppSelector((s) => s.auth);
-  const [book, setBook] = useState<Book | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const id = params.id as string;
+
+  const isPremium = useSelector(
+    (state: RootState) => state.auth.user?.subscribed ?? false,
+  );
 
   useEffect(() => {
-    const id = params?.id as string;
-    if (!id) return;
-    setLoading(true);
-    fetchBook(id)
-      .then((b) => setBook(b))
-      .catch((e) => setError(e.message))
-      .finally(() => setLoading(false));
-  }, [params?.id]);
-
-  const requireAuth = (premium: boolean) => {
-    if (!loggedIn) {
-      dispatch(openModal());
-      return false;
-    }
-    if (premium && !user?.subscribed) {
-      router.push("/choose-plan");
-      return false;
-    }
-    return true;
-  };
-
-  const onRead = () => {
-    if (!book) return;
-    if (!requireAuth(!!book.subscriptionRequired)) return;
-    // For now, reading is just staying on this page where content is shown
-  };
-
-  const onListen = () => {
-    if (!book) return;
-    if (!requireAuth(!!book.subscriptionRequired)) return;
-    router.push(`/player/${book.id}`);
-  };
-
-  if (loading) return <div className="p-6">Loading…</div>;
-  if (error) return <div className="p-6 text-red-600">{error}</div>;
-  if (!book) return <div className="p-6">Book not found</div>;
+    const fetchBookInfo = async () => {
+      const res = await fetch(
+        `https://us-central1-summaristt.cloudfunctions.net/getBook?id=${id}`,
+      );
+      const data = await res.json();
+      setBookInfo(data);
+    };
+    fetchBookInfo();
+  }, [id]);
 
   return (
-    <div className="max-w-4xl mx-auto px-6 py-8">
-      <h1 className="text-2xl font-semibold mb-2">{book.title}</h1>
-      <p className="text-zinc-600 dark:text-zinc-400 mb-6">By {book.author}</p>
-      {book.summary && (
-        <div className="prose dark:prose-invert max-w-none mb-6">
-          <h2>Summary</h2>
-          <p>{book.summary}</p>
+    <div className="wrapper">
+      <SearchBar />
+      <Sidebar />
+      <div className="row">
+        <div className="container">
+          {bookInfo ? (
+            <div className="inner__wrapper">
+              <div className="inner__book">
+                <div className="inner-book__title">{bookInfo.title}</div>
+                <div className="inner-book__author">{bookInfo.author}</div>
+                <div className="inner-book__sub-title">{bookInfo.subTitle}</div>
+                <div className="inner-book__wrapper">
+                  <div className="inner-book__description--wrapper">
+                    <div className="inner-book__description">
+                      <div className="inner-book__icon">
+                        <CiStar />
+                      </div>
+                      <div className="inner-book__description--text">
+                        {bookInfo.averageRating} ({bookInfo.totalRating}{" "}
+                        Ratings)
+                      </div>
+                    </div>
+                    <div className="inner-book__description">
+                      <div className="inner-book__icon">
+                        <CiClock1 />
+                      </div>
+                      <div className="inner-book__description--text">4:27</div>
+                    </div>
+                    <div className="inner-book__description">
+                      <div className="inner-book__icon">
+                        <CiMicrophoneOn />
+                      </div>
+                      <div className="inner-book__description--text">
+                        {bookInfo.type}
+                      </div>
+                    </div>
+                    <div className="inner-book__description">
+                      <div className="inner-book__icon">
+                        <PiLightbulbFilament />
+                      </div>
+                      <div className="inner-book__description--text">
+                        {bookInfo.keyIdeas} Key Ideas
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="inner-book__read--btn-wrapper">
+                  <Link
+                    href={
+                      isPremium || !bookInfo.subscriptionRequired
+                        ? `/player/${id}`
+                        : "/choose-plan"
+                    }
+                  >
+                    <button className="inner-book__read--btn">
+                      <div className="inner-book__read--icon">
+                        <PiBookOpenText />
+                      </div>
+                      <div className="inner-book__read--text">Read</div>
+                    </button>
+                  </Link>
+                  <Link
+                    href={
+                      isPremium || !bookInfo.subscriptionRequired
+                        ? `/player/${id}`
+                        : "/choose-plan"
+                    }
+                  >
+                    <button className="inner-book__read--btn">
+                      <div className="inner-book__read--icon">
+                        <CiMicrophoneOn />
+                      </div>
+                      <div className="inner-book__read--text">Listen</div>
+                    </button>
+                  </Link>
+                </div>
+                <div className="inner-book__bookmark">
+                  <div className="inner-book__bookmark--icon">
+                    <CiBookmark />
+                  </div>
+                  <div className="inner-book__bookmark--text">
+                    Add title to My Library
+                  </div>
+                </div>
+                <h2 className="inner-book__secondary--title">
+                  What's it about?
+                </h2>
+                <div className="inner-book__tags--wrapper">
+                  {bookInfo.tags.map((tag: string) => (
+                    <div key={tag} className="inner-book__tag">
+                      {tag}
+                    </div>
+                  ))}
+                </div>
+                <div className="inner-book__book--description">
+                  {bookInfo.bookDescription}
+                </div>
+                <h2 className="inner-book__secondary--title">
+                  About the author
+                </h2>
+                <div className="inner-book__author--description">
+                  {bookInfo.authorDescription}
+                </div>
+              </div>
+
+              <div className="inner-book--img-wrapper">
+                <figure className="book__image--wrapper">
+                  <img
+                    className="book__image"
+                    src={bookInfo.imageLink}
+                    alt=""
+                  />
+                </figure>
+              </div>
+            </div>
+          ) : (
+            <BookPageSkeleton />
+          )}
         </div>
-      )}
-      <div className="flex items-center gap-3">
-        <button
-          className="rounded-md bg-zinc-900 text-white dark:bg-zinc-100 dark:text-black px-4 py-2 text-sm"
-          onClick={onRead}
-        >
-          Read
-        </button>
-        <button
-          className="rounded-md border border-zinc-300 dark:border-zinc-700 px-4 py-2 text-sm"
-          onClick={onListen}
-        >
-          Listen
-        </button>
       </div>
     </div>
   );
-}
+};
+
+export default bookPage;

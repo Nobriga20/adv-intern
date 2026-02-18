@@ -6,22 +6,23 @@ import { BiCrown } from "react-icons/bi";
 import { BsStarFill, BsStarHalf } from "react-icons/bs";
 import { RiLeafLine } from "react-icons/ri";
 
-
 export default function Home() {
   return (
-      <><nav className="nav">
-      <div className="nav__wrapper">
-        <figure className="nav__img--mask">
-          <img className="nav__img" src="null" alt="logo" />
-        </figure>
-        <ul className="nav__list--wrapper">
-          <li className="nav__list nav__list--login">Login</li>
-          <li className="nav__list nav__list--mobile">About</li>
-          <li className="nav__list nav__list--mobile">Contact</li>
-          <li className="nav__list nav__list--mobile">Help</li>
-        </ul>
-      </div>
-    </nav><section id="landing">
+    <>
+      <nav className="nav">
+        <div className="nav__wrapper">
+          <figure className="nav__img--mask">
+            <img className="nav__img" src="/images/logo.png" alt="logo" />
+          </figure>
+          <ul className="nav__list--wrapper">
+            <li className="nav__list nav__list--login">Login</li>
+            <li className="nav__list nav__list--mobile">About</li>
+            <li className="nav__list nav__list--mobile">Contact</li>
+            <li className="nav__list nav__list--mobile">Help</li>
+          </ul>
+        </div>
+      </nav>
+      <section id="landing">
         <div className="container">
           <div className="row">
             <div className="landing__wrapper">
@@ -42,12 +43,13 @@ export default function Home() {
                 </Link>
               </div>
               <figure className="landing__image--mask">
-                <img src="null" alt="landing" />
+                <img src="/images/landing.png" alt="landing" />
               </figure>
             </div>
           </div>
         </div>
-      </section><section id="features">
+      </section>
+      <section id="features">
         <div className="container">
           <div className="row">
             <div className="section__title">
@@ -162,7 +164,8 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section><section id="reviews">
+      </section>
+      <section id="reviews">
         <div className="row">
           <div className="container">
             <div className="section__title">What our members say</div>
@@ -228,7 +231,8 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section><section id="numbers">
+      </section>
+      <section id="numbers">
         <div className="container">
           <div className="row">
             <div className="section__title">
@@ -266,7 +270,8 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section><section id="footer">
+      </section>
+      <section id="footer">
         <div className="container">
           <div className="row">
             <div className="footer__top--wrapper">
@@ -346,7 +351,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section></>
-  
+      </section>
+    </>
   );
 }

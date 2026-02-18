@@ -1,0 +1,178 @@
+/* Choose Plan Page Styles */
+.wrapper__full {
+  min-height: 100vh;
+  background: #f9f9f9;
+}
+.plan {
+  max-width: 900px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.07);
+  padding: 32px 24px 0 24px;
+}
+.plan__header--wrapper {
+  margin-bottom: 32px;
+}
+.plan__title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+.plan__sub-title {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+.plan__img--wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+.plan__img {
+  max-width: 320px;
+  width: 100%;
+  border-radius: 12px;
+}
+.plan__features--wrapper {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+.plan__features {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.plan__feature--icon {
+  font-size: 2rem;
+  color: #222;
+}
+.plan__features--text {
+  font-size: 1rem;
+  color: #444;
+}
+.bold {
+  font-weight: 700;
+}
+.section__title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 2rem 0 1rem 0;
+}
+.plan__card {
+  display: flex;
+  align-items: center;
+  border: 2px solid #eee;
+  border-radius: 12px;
+  padding: 1.5rem 1rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  transition: border 0.2s;
+}
+.plan__card--active {
+  border: 2px solid #222;
+  background: #f5f5f5;
+}
+.plan__card--circle {
+  width: 24px;
+  height: 24px;
+  border: 2px solid #bbb;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+}
+.plan__card--dot {
+  width: 12px;
+  height: 12px;
+  background: #222;
+  border-radius: 50%;
+}
+.plan__card--content {
+  flex: 1;
+}
+.plan__card--title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+.plan__card--price {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0.5rem 0;
+}
+.plan__card--text {
+  color: #666;
+  font-size: 0.95rem;
+}
+.plan__card--separator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1rem 0;
+}
+.plan__separator {
+  background: #eee;
+  padding: 0.2rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #888;
+}
+.plan__card--cta {
+  margin: 2rem 0 1rem 0;
+}
+.btn--wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+.btn {
+  background: #222;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn:hover {
+  background: #444;
+}
+.plan__disclaimer {
+  font-size: 0.95rem;
+  color: #666;
+  text-align: center;
+  margin-top: 0.5rem;
+}
+.faq__wrapper {
+  margin-top: 2.5rem;
+}
+.accordion__card {
+  border: 1px solid #eee;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  background: #fafafa;
+}
+.accordion__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  cursor: pointer;
+}
+.accordion__title {
+  font-size: 1rem;
+  font-weight: 600;
+}
+.menu__arrow {
+  font-size: 1.5rem;
+  color: #888;
+}
+.accordion__body {
+  padding: 1rem;
+  color: #444;
+  font-size: 0.98rem;
+}

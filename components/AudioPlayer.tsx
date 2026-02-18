@@ -1,98 +1,120 @@
 "use client";
-
 import { useEffect, useRef, useState } from "react";
+import "./componentStyles/AudioPlayer.css";
+import {
+  RiForward10Line,
+  RiReplay10Line,
+  RiPlayFill,
+  RiPauseFill,
+} from "react-icons/ri";
 
-function formatTime(seconds: number) {
-  const m = Math.floor(seconds / 60);
-  const s = Math.floor(seconds % 60);
-  return `${m}:${s.toString().padStart(2, "0")}`;
-}
+type Props = {
+  audioSrc: string;
+  title: string;
+  author: string;
+  image: string;
+};
 
-export default function AudioPlayer({ src }: { src: string }) {
+const AudioPlayer = ({ audioSrc, title, author, image }: Props) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [playing, setPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
 
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
-    const onLoaded = () => setDuration(audio.duration || 0);
-    const onTime = () => setCurrentTime(audio.currentTime || 0);
-    audio.addEventListener("loadedmetadata", onLoaded);
-    audio.addEventListener("timeupdate", onTime);
+
+    const updateTime = () => setCurrentTime(audio.currentTime);
+    const setMeta = () => setDuration(audio.duration);
+
+    audio.addEventListener("timeupdate", updateTime);
+    audio.addEventListener("loadedmetadata", setMeta);
+
     return () => {
-      audio.removeEventListener("loadedmetadata", onLoaded);
-      audio.removeEventListener("timeupdate", onTime);
+      audio.removeEventListener("timeupdate", updateTime);
+      audio.removeEventListener("loadedmetadata", setMeta);
     };
   }, []);
 
-  const togglePlay = () => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    if (playing) {
-      audio.pause();
-      setPlaying(false);
+  const togglePlay = async () => {
+    if (!audioRef.current) return;
+    if (isPlaying) {
+      audioRef.current.pause();
+      setIsPlaying(false);
     } else {
-      audio.play();
-      setPlaying(true);
+      try {
+        await audioRef.current.play();
+        setIsPlaying(true);
+      } catch (e) {
+        // Optionally handle play() rejection
+      }
     }
   };
 
-  const skip = (secs: number) => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    audio.currentTime = Math.max(0, Math.min(audio.currentTime + secs, duration));
+  const seek = (time: number) => {
+    if (!audioRef.current) return;
+    audioRef.current.currentTime = time;
   };
 
-  const onSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    const value = Number(e.target.value);
-    audio.currentTime = value;
-    setCurrentTime(value);
+  const formatTime = (time: number) => {
+    const min = Math.floor(time / 60);
+    const sec = Math.floor(time % 60)
+      .toString()
+      .padStart(2, "0");
+    return `${min}:${sec}`;
   };
 
   return (
-    <div className="w-full rounded-lg border border-zinc-200 dark:border-zinc-800 p-4">
-      <audio ref={audioRef} src={src} />
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2">
-          <button
-            className="rounded-md border px-3 py-2 text-sm"
-            onClick={() => skip(-10)}
-          >
-            ◀︎ 10s
-          </button>
-          <button
-            className="rounded-md bg-zinc-900 text-white dark:bg-zinc-100 dark:text-black px-4 py-2 text-sm"
-            onClick={togglePlay}
-          >
-            {playing ? "Pause" : "Play"}
-          </button>
-          <button
-            className="rounded-md border px-3 py-2 text-sm"
-            onClick={() => skip(10)}
-          >
-            10s ▶︎
-          </button>
-        </div>
-        <div className="text-sm text-zinc-600 dark:text-zinc-400">
-          {formatTime(duration)}
+    <div className="audio__wrapper">
+      <audio ref={audioRef} src={audioSrc} />
+
+      <div className="audio__track--wrapper">
+        <figure className="book__image--wrapper">
+          <img className="book__image" src={image} alt="" />
+        </figure>
+
+        <div className="audio__track--details-wrapper">
+          <div className="audio__track--title">{title}</div>
+          <div className="audio__track--author">{author}</div>
         </div>
       </div>
-      <input
-        type="range"
-        min={0}
-        max={duration || 0}
-        step={1}
-        value={currentTime}
-        onChange={onSeek}
-        className="w-full"
-      />
-      <div className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-        {formatTime(currentTime)}
+
+      <div className="audio__controls">
+        <button
+          className="audio__controls--btn"
+          onClick={() => seek(currentTime - 10)}
+        >
+          <RiReplay10Line />
+        </button>
+
+        <button className="audio__controls--btn-play" onClick={togglePlay}>
+          {isPlaying ? <RiPauseFill /> : <RiPlayFill />}
+        </button>
+
+        <button
+          className="audio__controls--btn"
+          onClick={() => seek(currentTime + 10)}
+        >
+          <RiForward10Line />
+        </button>
+      </div>
+
+      <div className="audio__progress--wrapper">
+        <div className="time">{formatTime(currentTime)}</div>
+
+        <input
+          type="range"
+          min={0}
+          max={duration || 0}
+          value={currentTime}
+          onChange={(e) => seek(Number(e.target.value))}
+        />
+
+        <div className="time">{formatTime(duration)}</div>
       </div>
     </div>
   );
-}
+};
+
+export default AudioPlayer;

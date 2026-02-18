@@ -1,5 +1,5 @@
 "use client";
-
+import "./player.css";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import type { Book } from "../../../components/BookCard";
@@ -28,11 +28,27 @@ export default function PlayerPage() {
       .finally(() => setLoading(false));
   }, [params?.id]);
 
-  if (loading) return <div className="p-6">Loading…</div>;
-  if (error) return <div className="p-6 text-red-600">{error}</div>;
-  if (!book) return <div className="p-6">Book not found</div>;
+  if (loading)
+    return (
+      <div className="wrapper">
+        <div className="p-6">Loading…</div>
+      </div>
+    );
+  if (error)
+    return (
+      <div className="wrapper">
+        <div className="p-6 text-red-600">{error}</div>
+      </div>
+    );
+  if (!book)
+    return (
+      <div className="wrapper">
+        <div className="p-6">Book not found</div>
+      </div>
+    );
 
   return (
+    <div className="wrapper">
     <div className="max-w-3xl mx-auto px-6 py-8">
       <h1 className="text-2xl font-semibold mb-2">{book.title}</h1>
       <p className="text-zinc-600 dark:text-zinc-400 mb-4 whitespace-pre-line">{book.summary}</p>
@@ -41,6 +57,7 @@ export default function PlayerPage() {
       ) : (
         <p>No audio available.</p>
       )}
+    </div>
     </div>
   );
 }

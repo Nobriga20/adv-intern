@@ -2,11 +2,13 @@
 
 import { configureStore } from "@reduxjs/toolkit";
 import { authReducer } from "../store/authSlice";
+import anonReducer from "../store/anonSlice";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
+    anon: anonReducer,
   },
 });
 

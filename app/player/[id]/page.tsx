@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import type { Book } from "../../../components/BookCard";
 import AudioPlayer from "../../../components/AudioPlayer";
+type Props = {
+  src: string;
+};
 
 async function fetchBook(id: string) {
   const url = `https://us-central1-summaristt.cloudfunctions.net/getBook?id=${id}`;

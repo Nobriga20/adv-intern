@@ -1,12 +1,18 @@
 // Landing page for Summarist-style homepage
+"use client"
 
 import Link from "next/link";
 import { AiFillAudio, AiFillBulb, AiFillFileText } from "react-icons/ai";
 import { BiCrown } from "react-icons/bi";
 import { BsStarFill, BsStarHalf } from "react-icons/bs";
 import { RiLeafLine } from "react-icons/ri";
-
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../lib/store";
 export default function Home() {
+
+  const dispatch = useDispatch();
+  const modalOpen = useSelector((state: RootState) => state.modal.value);
+
   return (
     <>
       <nav className="nav">
